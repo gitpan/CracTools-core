@@ -1,0 +1,22 @@
+# Makemaker trash files
+^pm_to_blib
+Makefile\.(?!PL).
+Makefile$
+
+# Lib files
+^blib/
+
+# Extra files
+^test/
+^extra/
+\.cfg$
+TODO
+todotest
+
+# Temp files
+\.swp$
+\.old$
+\.bak
+
+# SVN
+\.svn
