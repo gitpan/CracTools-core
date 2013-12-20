@@ -76,15 +76,17 @@
 #                                                                             #
 ###############################################################################
 
-package CracTools;
-
-our $VERSION = '1.00';
-
-our $PACKAGE_NAME = "CracTools";
-
 =head1 NAME
 
-CracTools - A set of tools designed to extract information from CRAC's SAM files.
+CracTools - A set of tools designed to extract data from CRAC's SAM files and to provide annotations.
+
+=cut 
+
+package CracTools;
+
+our $VERSION = '1.01';
+
+our $PACKAGE_NAME = "CracTools";
 
 =head1 AUTHORS
 

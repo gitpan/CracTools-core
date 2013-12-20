@@ -103,6 +103,8 @@ use warnings;
 use Carp;
 use Data::Dumper;
 
+use CracTools::Utils;
+
 =head1 Variables
 
 =head2 %flags
@@ -244,6 +246,22 @@ sub getStrand {
     return -1;
   } else {
     return 1;
+  }
+}
+
+=head2 getOriginalSeq
+
+  Descrition   : Return the original sequence as it was in the FASTQ file.
+                 In fact we reverse complemente the sequence if flag 16 is raised.
+
+=cut
+
+sub getOriginalSeq {
+  my $self = shift;
+  if($self->isFlagged($flags{REVERSE_COMPLEMENTED})) {
+    return CracTools::Utils::reverseComplement($self->seq);
+  } else {
+    return $self->seq;
   }
 }
 

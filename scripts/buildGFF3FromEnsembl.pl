@@ -220,17 +220,24 @@ foreach my $gene (@genes){
     # First, write genes features 
     print $output "$chr\t$source\tgene\t$gene_start\t$gene_end\t.\t$strand\t.\tID=$gene_id\;Name=$hugo\;transcripts_nb=$nb_transcripts\;exons_nb=$nb_exons_gene\n" unless ($gene_start eq NONE);
 
+    my ($five_start,$five_end,$three_start,$three_end);
     foreach my $transcript (@transcripts){
 	my $transcript_id = $transcript->stable_id() or die("transcript id is required");
 	my $transcript_start = $transcript->start() or die("transcript start is required");
 	my $transcript_end = $transcript->end() or die("transcript end is required");
 	my $cds_start = defined $transcript->coding_region_start() ? $transcript->coding_region_start():NONE;
 	my $cds_end = defined $transcript->coding_region_end() ? $transcript->coding_region_end():NONE;
-	my $five_end = ($cds_start =~ m/^\d+$/ && $cds_start > $transcript_start) ? ($cds_start -1):NONE; 
-	my $five_start = ($five_end eq NONE) ? NONE:$transcript_start; 
-	my $three_start = ($cds_end =~ m/^\d+$/ && $cds_end < $transcript_end) ? ($cds_end +1):NONE;
-	my $three_end = ($three_start eq NONE) ? NONE:$transcript_end;
-
+	if ($strand eq "+"){	
+	    $five_end = ($cds_start =~ m/^\d+$/ && $cds_start > $transcript_start) ? ($cds_start -1):NONE; 
+	    $five_start = ($five_end eq NONE) ? NONE:$transcript_start; 
+	    $three_start = ($cds_end =~ m/^\d+$/ && $cds_end < $transcript_end) ? ($cds_end +1):NONE;
+	    $three_end = ($three_start eq NONE) ? NONE:$transcript_end;
+	}else{
+	    $three_end = ($cds_start =~ m/^\d+$/ && $cds_start > $transcript_start) ? ($cds_start -1):NONE; 
+	    $three_start = ($three_end eq NONE) ? NONE:$transcript_start; 
+	    $five_start = ($cds_end =~ m/^\d+$/ && $cds_end < $transcript_end) ? ($cds_end +1):NONE;
+	    $five_end = ($five_start eq NONE) ? NONE:$transcript_end;
+	}
 	my @exons_transcript = @{ $transcript->get_all_Exons() };
 	my $nb_exons_transcript = scalar @exons_transcript;
 

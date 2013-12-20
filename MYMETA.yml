@@ -1,5 +1,5 @@
 ---
-abstract: lib/CracTools.pm
+abstract: "A set of tools designed to extract data from CRAC's SAM files and to provide annotations"
 author:
   - 'Nicolas PHILIPPE <nicolas.philippe@inserm.fr>'
   - 'Alban MANCHERON <alban.mancheron@lirmm.fr>'
@@ -27,4 +27,4 @@ requires:
   Fcntl: 0
   Set::IntervalTree: 0
   Storable: 0
-version: 1.00
+version: 1.01

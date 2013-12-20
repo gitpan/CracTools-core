@@ -78,7 +78,7 @@
 
 =head1 NAME
 
-  CracTools::GFF::Query - Query GFF files easily.
+CracTools::GFF::Query - Query GFF files easily.
 
 =head1 SYNOPSIS
 

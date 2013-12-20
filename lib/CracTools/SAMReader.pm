@@ -158,7 +158,7 @@ sub new {
 
 sub iterator {
   my $self = shift;
-  my $f_it = $self->iteratorFile("INGNORE_HEADERS");
+  my $f_it = $self->iteratorFile("IGNORE_HEADERS");
 
   return sub {
     my ($line) = $f_it->();
@@ -172,7 +172,7 @@ sub iterator {
 
 =head2 iteratorFile
 
-  Arg [1] : (Optional) String - options (INGORE_HEADERS,..)
+  Arg [1] : (Optional) String - options (IGNORE_HEADERS,..)
 
   Example     : my $it_f = $sam_reader->iteratorFile();
                 while(my ($line,$line_number) = $it->()) {
@@ -203,7 +203,7 @@ sub iteratorFile {
   my $next_line;
   my $line_number = 0;
 
-  if(defined $option && $option eq "INGNORE_HEADERS") {
+  if(defined $option && $option eq "IGNORE_HEADERS") {
     while(my $line = <SAM>) {
       if(!($line =~ /^@/)) {
         $next_line = $line;
@@ -242,6 +242,27 @@ sub iteratorFile {
 sub header {
   my $self = shift;
   return $self->{header};
+}
+
+=head2 refSeqLength
+
+  Description : Return the length of the reference sequence given in argument
+  ReturnType  : Integer
+
+=cut
+
+sub refSeqLength {
+  my $self = shift;
+  my $ref_seq = shift;
+  croak("Missing reference sequence name in arguement") unless defined $ref_seq;
+  my @header_lines = split('\n',$self->header);
+  my $ref_seq_len; 
+  foreach (@header_lines) {
+    if ($_ =~/\@SQ.*SN:$ref_seq/) {
+      ($ref_seq_len) = $_ =~ /LN:([^\t]+)/;    
+    }
+  }
+  return $ref_seq_len;
 }
 
 sub commandLine {

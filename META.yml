@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:               CracTools-core
-version:            1.00
-abstract:           lib/CracTools.pm
+version:            1.01
+abstract:           A set of tools designed to extract data from CRAC's SAM files and to provide annotations
 author:
     - Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
     - Alban MANCHERON <alban.mancheron@lirmm.fr>

@@ -1,25 +1,23 @@
 Changes
-install_local.sh
 lib/CracTools.pm
 lib/CracTools/Annotator.pm
 lib/CracTools/Config.pm
 lib/CracTools/Const.pm
 lib/CracTools/GFF/Annotation.pm
 lib/CracTools/GFF/Query.pm
-lib/CracTools/GFF/Query2.pm
 lib/CracTools/Output.pm
-lib/CracTools/ReadAnnotation.pm
 lib/CracTools/SAMReader.pm
 lib/CracTools/SAMReader/SAMline.pm
+lib/CracTools/Utils.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
-MANIFEST.SKIP
 MYMETA.yml
 README
 scripts/buildGFF3FromEnsembl.pl
 scripts/generateCracSummary.pl
 scripts/generateReport.pl
+scripts/mix_summarize_crac.pl
 t/00-load-common.t
 t/CracTools::Annotator.t
 t/CracTools::GFF::Annotation.t
