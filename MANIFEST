@@ -12,19 +12,19 @@ lib/CracTools/Utils.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
-MYMETA.yml
 README
 scripts/buildGFF3FromEnsembl.pl
 scripts/generateCracSummary.pl
 scripts/generateReport.pl
 scripts/mix_summarize_crac.pl
 t/00-load-common.t
-t/CracTools::Annotator.t
-t/CracTools::GFF::Annotation.t
-t/CracTools::GFF::Query.t
-t/CracTools::SAMReader.t
-t/CracTools::SAMReader::SAMline.t
+t/CracTools-Annotator.t
+t/CracTools-GFF-Annotation.t
+t/CracTools-GFF-Query.t
+t/CracTools-SAMReader-SAMline.t
+t/CracTools-SAMReader.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
-META.yml                                 Module meta-data (added by MakeMaker)
+META.yml                                 Module YAML meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)

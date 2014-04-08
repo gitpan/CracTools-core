@@ -78,11 +78,7 @@
 
 =head1 NAME
 
-  CracTools::Utils - A set of usefull functions
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
+CracTools::Utils - A set of useful functions
 
 =cut
 

@@ -76,6 +76,8 @@
 #                                                                             #
 ###############################################################################
 
+=encoding utf8
+
 =head1 NAME
 
 CracTools - A set of tools designed to extract data from CRAC's SAM files and to provide annotations.
@@ -84,7 +86,7 @@ CracTools - A set of tools designed to extract data from CRAC's SAM files and to
 
 package CracTools;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 our $PACKAGE_NAME = "CracTools";
 

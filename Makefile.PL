@@ -87,15 +87,15 @@ my $Nico = 'Nicolas PHILIPPE <nicolas.philippe@inserm.fr>';
 my $DoccY = 'Alban MANCHERON <alban.mancheron@lirmm.fr>';
 my $Jero = 'Jérôme AUDOUX <jerome.audoux@univ-montp2.fr>';
 
-my @authors = ($Nico,$DoccY, $Jero);
+my $authors = "$Nico, $DoccY, $Jero";
 
 my %prereq_pm = (
   "Config::FileManager" => 0,
   "Config::Simple" => 0,
-  "Storable" => 0,
+  #"Storable" => 0,
   "Fcntl" => 0,
   "Carp" => 0,
-  "Set::IntervalTree" => 0,
+  "Set::IntervalTree" => 0.09,
 );
 
 ## Makefile for Complete Module
@@ -104,9 +104,9 @@ WriteMakefile(
   VERSION_FROM      => 'lib/CracTools.pm',
   ($] >= 5.005 ? ## Add these new keywords supported since 5.005 
   (ABSTRACT     =>  'A set of tools designed to extract data from CRAC\'s SAM files and to provide annotations',
-  AUTHOR            => \@authors) :()),
+  AUTHOR            => $authors) :()),
   EXE_FILES         => [glob('scripts/*')],
-  PREREQ_FATAL      => 1,
+  #PREREQ_FATAL      => 1,
   PREREQ_PM         => \%prereq_pm,
 );
 

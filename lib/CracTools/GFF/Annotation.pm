@@ -78,7 +78,7 @@
 
 =head1 NAME
 
-  CracTools::GFF::Annotation - Parse GFF lines.
+CracTools::GFF::Annotation - Parse GFF lines.
 
 =head1 SYNOPSIS
 
@@ -98,7 +98,7 @@ Usage:
 
 =head1 DESCRIPTION
 
-  CracTools::GFF::Annotataion is an object to parse and access GFF line's fields.
+CracTools::GFF::Annotataion is an object to parse and access GFF line's fields.
 
 =cut
 
@@ -181,6 +181,14 @@ sub _init {
 
 }
 
+=head1 GETTERS AND SETTERS
+
+=head2 chr
+
+  Description : Getter/setter for attribute chr
+
+=cut
+
 sub chr {
   my $self = shift;
   my $chr = shift;
@@ -189,6 +197,12 @@ sub chr {
   }
   return $self->{chr};
 }
+
+=head2 source
+
+  Description : Getter/setter for attribute source
+
+=cut
 
 sub source {
   my $self = shift;
@@ -199,6 +213,12 @@ sub source {
   return $self->{source};
 }
 
+=head2 feature
+
+  Description : Getter/setter for attribute feature
+
+=cut
+
 sub feature {
   my $self = shift;
   my $feature = shift;
@@ -207,6 +227,12 @@ sub feature {
   }
   return $self->{feature};
 }
+
+=head2 start
+
+  Description : Getter/setter for attribute start
+
+=cut
 
 sub start {
   my $self = shift;
@@ -217,6 +243,12 @@ sub start {
   return $self->{start};
 }
 
+=head2 end
+
+  Description : Getter/setter for attribute end
+
+=cut
+
 sub end {
   my $self = shift;
   my $end = shift;
@@ -225,6 +257,12 @@ sub end {
   }
   return $self->{end};
 }
+
+=head2 score
+
+  Description : Getter/setter for attribute score
+
+=cut
 
 sub score {
   my $self = shift;
@@ -235,6 +273,12 @@ sub score {
   return $self->{score};
 }
 
+=head2 strand
+
+  Description : Getter/setter for attribute strand ('+','-' convention)
+
+=cut
+
 sub strand {
   my $self = shift;
   my $strand = shift;
@@ -244,10 +288,22 @@ sub strand {
   return $self->{strand};
 }
 
+=head2 gffStrand
+
+  Description : Return strand using "1","-1" convention.
+
+=cut
+
 sub gffStrand {
   my $self = shift;
   return convertStrand($self->{strand});
 }
+
+=head2 phase
+
+  Description : Getter/setter for attribute phase
+
+=cut
 
 sub phase {
   my $self = shift;
@@ -258,6 +314,13 @@ sub phase {
   return $self->{phase};
 }
 
+=head2 parents
+
+  Description : Getter for attribute parents.
+  ReturnType  : Array of strings with parents ID
+
+=cut
+
 sub parents {
   my $self = shift;
   if(defined $self->attribute('Parent')) {
@@ -266,6 +329,12 @@ sub parents {
     return ();
   }
 }
+
+=head2 attribute
+
+  Description : Getter/setter for attribute attribute
+
+=cut
 
 sub attribute {
   my $self = shift;
@@ -280,6 +349,16 @@ sub attribute {
     #croak ("Missing attribute key to retreive attribute value");
   }
 }
+
+=head1 STATIC METHODS
+
+=head2 convertStrand
+  
+  Arg [1] : Character - strand using '+' and '-' signs
+
+  Description : Retrun the strand using the (1,-1) convention
+                instead of the ('+','-') convention of GFF files.
+=cut
 
 sub convertStrand($) {
   my $strand = shift;

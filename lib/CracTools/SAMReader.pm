@@ -76,13 +76,13 @@
 #                                                                             #
 ###############################################################################
 
+=encoding utf8
+
 =head1 NAME
 
-  CracTools::SAMReader - An easy to use tool to read files in SAM format.
+CracTools::SAMReader - An easy to use tool to read files in SAM format.
 
 =head1 SYNOPSIS
-
-Usage:
 
   use CracTools::SAMReader;
 
@@ -104,7 +104,7 @@ Usage:
 
 =head1 DESCRIPTION
 
-  Reader for SAM format, including CRAC special fields.
+Reader for SAM format, including CRAC special fields.
 
 =cut
 
@@ -195,7 +195,7 @@ sub iteratorFile {
   } elsif($self->{sam_file} =~ /\.sam.gz$/) {
     open(SAM,"gunzip -c $sam_file |") or die ("Cannot open $sam_file");
   } elsif($self->{sam_file} =~ /\.bam$/) {
-    open(SAM, "-|", "samtools view $sam_file" )or die "Cannot open $sam_file, check if samtools are installed.";
+    open(SAM, "-|", "samtools view -h $sam_file" )or die "Cannot open $sam_file, check if samtools are installed.";
   } else {
     die "Unknown file format. Must be either a BAM or a SAM(.gz)";
   }
@@ -265,6 +265,13 @@ sub refSeqLength {
   return $ref_seq_len;
 }
 
+=head2 commandLine
+
+  Description : Return crac command line defined in SAM's header
+  ReturnType  : String
+
+=cut
+
 sub commandLine {
   my $self = shift;
   if(defined $self->header) {
@@ -281,7 +288,12 @@ sub commandLine {
   }
 }
 
-# retrun the value of the specified argument in crac command line
+=head2 getCracArgumentValue
+
+  Description : Retrun the value of the specified argument in crac command line
+
+=cut 
+
 sub getCracArgumentValue {
   my $self = shift;
   my $argument = shift;
@@ -294,7 +306,12 @@ sub getCracArgumentValue {
   }
 }
 
-# returne true if crac command line has specified a certain option
+=head2 hasCracOption
+
+  Description : Return true if crac command line has specified a certain option
+
+=cut
+
 sub hasCracOption {
   my $self = shift;
   my $option = shift;

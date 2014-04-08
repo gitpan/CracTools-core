@@ -1,0 +1,45 @@
+{
+   "abstract" : "A set of tools designed to extract data from CRAC's SAM files and to provide annotations",
+   "author" : [
+      "Nicolas PHILIPPE <nicolas.philippe@inserm.fr>, Alban MANCHERON <alban.mancheron@lirmm.fr>, Jérôme AUDOUX <jerome.audoux@univ-montp2.fr>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380",
+   "license" : [
+      "unknown"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "CracTools-core",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : "0",
+            "Config::FileManager" : "0",
+            "Config::Simple" : "0",
+            "Fcntl" : "0",
+            "Set::IntervalTree" : "0.09"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "version" : "1.02"
+}

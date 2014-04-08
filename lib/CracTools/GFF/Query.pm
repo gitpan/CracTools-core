@@ -98,11 +98,11 @@ Usage:
 
 =head1 DESCRIPTION
 
-  CracTools::GFF::Query is a tool to query GFF files without building a database.
-  It is memory efficient and designed to run fast.
-  You can easily retrives GFF data from a specific region of position.
-  This tool can be use with CracTools::GFF::Annotation in order to parse GFF line
-  into a nice usable Perl Object.
+CracTools::GFF::Query is a tool to query GFF files without building a database.
+It is memory efficient and designed to run fast.
+You can easily retrives GFF data from a specific region of position.
+This tool can be use with CracTools::GFF::Annotation in order to parse GFF line
+into a nice usable Perl Object.
 
 =cut
 
@@ -193,7 +193,7 @@ sub fetchByRegion {
             The orientation of the slice on the sequence region
 
   Example     : my @annotations = $gffQuery->fetchByLocation('1',298345,'+');
-  Description : Retrives GFF lines that belong to the location.
+  Description : Retrives GFF lines that overlapped the given location.
   ReturnType  : Reference to an Array of strings
   Exceptions  : none
 
@@ -204,10 +204,22 @@ sub fetchByLocation {
   return $self->fetchByRegion($chr,$position,$position,$strand);
 }
 
+=head1 GETTERS AND SETTERS
+
+=head2 gffFile
+
+  Description : Getter method for the attribute gff_file
+
+=cut
+
 sub gffFile {
   my $self = shift;
   return $self->{GFF_FILE};
 }
+
+=head1 PRIVATE METHODS
+
+=cut 
 
 sub _gffFilehandle {
   my $self = shift;
@@ -270,6 +282,15 @@ sub _getAnnotations {
   return $self->{ANNOTATIONS}{$self->_getAnnotationHashKey($chr,$strand)};
 }
 
+=head1 STATIC METHODS
+
+=head2 convertStrand
+  
+  Arg [1] : Character - strand using '+' and '-' signs
+
+  Description : Retrun the strand using the (1,-1) convention
+                instead of the ('+','-') convention of GFF files.
+=cut
 
 sub convertStrand($) {
   my $strand = shift;

@@ -78,11 +78,7 @@
 
 =head1 NAME
 
-  CracTools::Const - Constants for the CracTools-core
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
+CracTools::Const - Constants for the CracTools-core
 
 =head1 CONSTANTS
 
@@ -93,25 +89,13 @@ package CracTools::Const;
 use strict;
 use warnings;
 
-=head2 Annotation Consts
-
 =over
 
-=item ANNOTATION_DISTANCE_MAX
+=item NOT_AVAILABLE
 
-Maximum distance to find the first gene in the 5' neighborhood and the 3' neighborhood of the tag
-
-=cut
-
-our $ANNOTATION_DISTANCE_MAX = 180000;
-
-=item INTERGENIC_THRESHOLD
+=back
 
 =cut
-
-our $INTERGENIC_THRESHOLD = 3000;
-
-our $NEIGHBORHOOD_SEARCH = 0;
 
 our $NOT_AVAILABLE = 'N/A';
 
