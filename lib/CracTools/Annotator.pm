@@ -180,10 +180,13 @@ sub foundSameGene {
     }
   }
   foreach my $gene_id (@genes1) {
-    if($gene_id ~~ @genes2) {
-      $found_same_gene = 1;
-      last;
+    foreach (@genes2) {
+      if($gene_id eq $_) {
+        $found_same_gene = 1;
+        last;
+      }
     }
+    last if $found_same_gene == 1;
   }
   return $found_same_gene;
 }

@@ -101,8 +101,6 @@ package CracTools::SAMReader::SAMline;
 use strict;
 use warnings;
 use Carp;
-use Data::Dumper;
-use Switch;
 
 use CracTools::Utils;
 
@@ -764,14 +762,21 @@ sub genericInfo {
 sub isClassified {
   my $self = shift;
   my $class = shift;
+  
+  croak "Missing class argument" unless defined $class;
 
-  switch($class) {
-    case "unique"       { return $self->{extended_fields}{XU} }
-    case "duplicated"   { return $self->{extended_fields}{XD} }
-    case "multiple"     { return $self->{extended_fields}{XM} }
-    case "normal"       { return $self->{extended_fields}{XN} == 1 }
-    case "almostNormal" { return $self->{extended_fields}{XU} == 2 }
-    else                { return undef }
+  if($class eq "unique") {
+    return $self->{extended_fields}{XU};
+  } elsif($class eq "duplicated") {
+    return $self->{extended_fields}{XD};
+  } elsif($class eq "multiple") {
+    return $self->{extended_fields}{XM};
+  } elsif($class eq "normal") {
+    return $self->{extended_fields}{XN} == 1;
+  } elsif($class eq "almostNormal") {
+    return $self->{extended_fields}{XN} == 2;
+  } else {
+    croak "Class argument ($class) does not match any case";
   }
 }
 

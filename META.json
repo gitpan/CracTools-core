@@ -36,10 +36,12 @@
             "Config::FileManager" : "0",
             "Config::Simple" : "0",
             "Fcntl" : "0",
+            "File::Basename" : "0",
+            "File::HomeDir" : "0",
             "Set::IntervalTree" : "0.09"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "1.02"
+   "version" : "1.03"
 }

@@ -165,18 +165,21 @@ sub new {
 
 sub fetchByRegion {
   my ($self,$chr,$pos_start,$pos_end,$strand) = @_;
+
   my $annotations_ref = $self->_getAnnotations($chr,$strand);
-
-  # pos_start -1 beacause Interval tree use [a,b) intervals
-  my $seek_values = $self->_getAnnotations($chr,$strand)->fetch($pos_start-1,$pos_end);
-
-  my $gff_fh = $self->_gffFilehandle;
-
   my @gff_lines;
-  foreach (@$seek_values) {
-    seek($gff_fh,$_,SEEK_SET);
-    my $annot = <$gff_fh>;
-    push(@gff_lines,$annot);
+  
+  if(defined $annotations_ref) {
+    # pos_start -1 beacause Interval tree use [a,b) intervals
+    my $seek_values = $annotations_ref->fetch($pos_start-1,$pos_end);
+
+    my $gff_fh = $self->_gffFilehandle;
+
+    foreach (@$seek_values) {
+      seek($gff_fh,$_,SEEK_SET);
+      my $annot = <$gff_fh>;
+      push(@gff_lines,$annot);
+    }
   }
 
   return \@gff_lines;
