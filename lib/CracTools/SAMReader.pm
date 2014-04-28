@@ -76,59 +76,17 @@
 #                                                                             #
 ###############################################################################
 
-=encoding utf8
-
-=head1 NAME
-
-CracTools::SAMReader - An easy to use tool to read files in SAM format.
-
-=head1 SYNOPSIS
-
-  use CracTools::SAMReader;
-
-  # Creating the reader
-  my $sam_reader = CracTools::SAMreader->new($sam,'CRAC');
-
-  # Get an iterator to go through the SAM file in a linear way
-  my $it = $sam_reader->iterator();
-  
-  # Iterate on lines and explore CRAC special fields of SAM
-  while(my $line = $it->()) {
-    if(defined $line->events('Junction') && $line->isClassified('normal')) {
-      my @junctions = @{$line->events('Junction')};
-      foreach my $junction (@junctions) {
-        print "Foud Junction : [type : $junction->{type}, loc : $junction->{loc}, gap : $junction->{gap}]\n";
-      } 
-    }
-  }
-
-=head1 DESCRIPTION
-
-Reader for SAM format, including CRAC special fields.
-
-=cut
 
 package CracTools::SAMReader;
-
+{
+  $CracTools::SAMReader::DIST = 'CracTools-core';
+}
+# ABSTRACT: An easy to use tool to read files in SAM format.
+$CracTools::SAMReader::VERSION = '1.031';
 use strict;
 use warnings;
 use CracTools::SAMReader::SAMline;
 
-=head1 METHODS
-
-=head2 new
-
-  Arg [1] : String - SAM file
-  Arg [2] : (Optional) String - SAM type
-            - CRAC
-            - CRAC_EMT
-
-  Example     : $reader = CracTools::SAMreader->new('file.sam','CRAC');
-  Description : Create a new reader obect
-  ReturnType  : CracTools::SAMreader
-  Exceptions  : none
-
-=cut
 
 sub new {
   my $class = shift;
@@ -144,17 +102,6 @@ sub new {
   return $self;
 }
 
-=head2 iterator
-
-  Example     : my $it = $sam_reader->iterator();
-                while(my $line = $it->()) {
-                  print $line->seq,"\n";
-                }
-  Description : Create an iterator to go throud each lines of the file
-  ReturnType  : Iterator on CracTools::SAMline
-  Exceptions  : none
-
-=cut
 
 sub iterator {
   my $self = shift;
@@ -170,20 +117,6 @@ sub iterator {
   };
 }
 
-=head2 iteratorFile
-
-  Arg [1] : (Optional) String - options (IGNORE_HEADERS,..)
-
-  Example     : my $it_f = $sam_reader->iteratorFile();
-                while(my ($line,$line_number) = $it->()) {
-                  print $line,"\n";
-                }
-  Description : Create an iterator to go throud each lines of the file
-  ReturnType  : Iterator on Array (String,Int) where the <String> is the
-                line, and <Int> the line number.
-  Exceptions  : none
-
-=cut
 
 sub iteratorFile {
   my $self = shift;
@@ -227,29 +160,13 @@ sub iteratorFile {
   };
 }
 
-=head1 GETTERS AND SETTERS
 
-=cut
-
-=head2 header
-
-  Description : Getter/setter for attribute header
-  ReturnType  : none
-  Exceptions  : none
-
-=cut
 
 sub header {
   my $self = shift;
   return $self->{header};
 }
 
-=head2 refSeqLength
-
-  Description : Return the length of the reference sequence given in argument
-  ReturnType  : Integer
-
-=cut
 
 sub refSeqLength {
   my $self = shift;
@@ -265,12 +182,6 @@ sub refSeqLength {
   return $ref_seq_len;
 }
 
-=head2 commandLine
-
-  Description : Return crac command line defined in SAM's header
-  ReturnType  : String
-
-=cut
 
 sub commandLine {
   my $self = shift;
@@ -288,11 +199,6 @@ sub commandLine {
   }
 }
 
-=head2 getCracArgumentValue
-
-  Description : Retrun the value of the specified argument in crac command line
-
-=cut 
 
 sub getCracArgumentValue {
   my $self = shift;
@@ -306,11 +212,6 @@ sub getCracArgumentValue {
   }
 }
 
-=head2 hasCracOption
-
-  Description : Return true if crac command line has specified a certain option
-
-=cut
 
 sub hasCracOption {
   my $self = shift;
@@ -323,15 +224,6 @@ sub hasCracOption {
   }
 }
 
-=head1 PRIVATE METHODS
-
-=head2 init (private)
-
-  Description : Initialization method
-  ReturnType  : none
-  Exceptions  : none
-
-=cut
 
 sub init {
   my $self = shift;
@@ -347,43 +239,137 @@ sub init {
   $self->{header} = $header;
 }
 
+1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+CracTools::SAMReader - An easy to use tool to read files in SAM format.
+
+=head1 VERSION
+
+version 1.031
+
+=head1 SYNOPSIS
+
+  use CracTools::SAMReader;
+
+  # Creating the reader
+  my $sam_reader = CracTools::SAMreader->new($sam,'CRAC');
+
+  # Get an iterator to go through the SAM file in a linear way
+  my $it = $sam_reader->iterator();
+  
+  # Iterate on lines and explore CRAC special fields of SAM
+  while(my $line = $it->()) {
+    if(defined $line->events('Junction') && $line->isClassified('normal')) {
+      my @junctions = @{$line->events('Junction')};
+      foreach my $junction (@junctions) {
+        print "Foud Junction : [type : $junction->{type}, loc : $junction->{loc}, gap : $junction->{gap}]\n";
+      } 
+    }
+  }
+
+=head1 DESCRIPTION
+
+Reader for SAM format, including CRAC special fields.
+
+=head1 METHODS
+
+=head2 new
+
+  Arg [1] : String - SAM file
+  Arg [2] : (Optional) String - SAM type
+            - CRAC
+            - CRAC_EMT
+
+  Example     : $reader = CracTools::SAMreader->new('file.sam','CRAC');
+  Description : Create a new reader obect
+  ReturnType  : CracTools::SAMreader
+  Exceptions  : none
+
+=head2 iterator
+
+  Example     : my $it = $sam_reader->iterator();
+                while(my $line = $it->()) {
+                  print $line->seq,"\n";
+                }
+  Description : Create an iterator to go throud each lines of the file
+  ReturnType  : Iterator on CracTools::SAMline
+  Exceptions  : none
+
+=head2 iteratorFile
+
+  Arg [1] : (Optional) String - options (IGNORE_HEADERS,..)
+
+  Example     : my $it_f = $sam_reader->iteratorFile();
+                while(my ($line,$line_number) = $it->()) {
+                  print $line,"\n";
+                }
+  Description : Create an iterator to go throud each lines of the file
+  ReturnType  : Iterator on Array (String,Int) where the <String> is the
+                line, and <Int> the line number.
+  Exceptions  : none
+
+=head1 GETTERS AND SETTERS
+
+=head2 header
+
+  Description : Getter/setter for attribute header
+  ReturnType  : none
+  Exceptions  : none
+
+=head2 refSeqLength
+
+  Description : Return the length of the reference sequence given in argument
+  ReturnType  : Integer
+
+=head2 commandLine
+
+  Description : Return crac command line defined in SAM's header
+  ReturnType  : String
+
+=head2 getCracArgumentValue
+
+  Description : Retrun the value of the specified argument in crac command line
+
+=head2 hasCracOption
+
+  Description : Return true if crac command line has specified a certain option
+
+=head1 PRIVATE METHODS
+
+=head2 init (private)
+
+  Description : Initialization method
+  ReturnType  : none
+  Exceptions  : none
+
 =head1 AUTHORS
 
-Jerome AUDOUX E<lt>L<jerome.audoux@etud.univ-montp2.fr|mailto:jerome.audoux@univ-montp2.fr>E<gt>.
+=over 4
+
+=item *
+
+Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
+
+=item *
+
+Jérôme AUDOUX <jaudoux@cpan.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2012-2013 -- IRB/INSERM
-                           (Institut de Recherche en Biothérapie /
-                            Institut National de la Santé et de la
-                            Recherche Médicale)
-                           LIRMM/UM2
-                           (Laboratoire d'Informatique, de Robotique et de
-                            Microélectronique de Montpellier /
-                            Université de Montpellier 2)
+This software is Copyright (c) 2014 by IRB/INSERM (Institut de Recherche en Biothérapie / Institut National de la Santé et de la Recherche Médicale).
 
-=head2 FRENCH
+This is free software, licensed under:
 
-Ce fichier  fait partie  du Pipeline  de traitement  de données NGS de la
-plateforme ATGC labélisée par le GiS IBiSA.
-
-Ce logiciel est régi  par la licence CeCILL  soumise au droit français et
-respectant les principes  de diffusion des logiciels libres.  Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions de
-la licence CeCILL  telle que diffusée par le CEA,  le CNRS et l'INRIA sur
-le site "http://www.cecill.info".
-
-=head2 ENGLISH
-
-This File is part of the NGS data processing Pipeline of the ATGC
-accredited by the IBiSA GiS.
-
-This software is governed by the CeCILL license under French law and
-abiding by the rules of distribution of free software. You can use,
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info".
+  CeCILL FREE SOFTWARE LICENSE AGREEMENT, Version 2.1 dated 2013-06-21
 
 =cut
-
-1;

@@ -76,18 +76,33 @@
 #                                                                             #
 ###############################################################################
 
+package CracTools::Const;
+{
+  $CracTools::Const::DIST = 'CracTools-core';
+}
+# ABSTRACT: Constants for the CracTools-core
+$CracTools::Const::VERSION = '1.031';
+use strict;
+use warnings;
+
+
+our $NOT_AVAILABLE = 'N/A';
+
+1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
 =head1 NAME
 
 CracTools::Const - Constants for the CracTools-core
 
-=head1 CONSTANTS
+=head1 VERSION
 
-=cut
-
-package CracTools::Const;
-
-use strict;
-use warnings;
+version 1.031
 
 =over
 
@@ -95,8 +110,26 @@ use warnings;
 
 =back
 
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
+
+=item *
+
+Jérôme AUDOUX <jaudoux@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2014 by IRB/INSERM (Institut de Recherche en Biothérapie / Institut National de la Santé et de la Recherche Médicale).
+
+This is free software, licensed under:
+
+  CeCILL FREE SOFTWARE LICENSE AGREEMENT, Version 2.1 dated 2013-06-21
+
 =cut
-
-our $NOT_AVAILABLE = 'N/A';
-
-1;

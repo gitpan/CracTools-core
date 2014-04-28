@@ -76,29 +76,17 @@
 #                                                                             #
 ###############################################################################
 
-=head1 NAME
-
-CracTools::Utils - A set of useful functions
-
-=cut
-
 package CracTools::Utils;
-
+{
+  $CracTools::Utils::DIST = 'CracTools-core';
+}
+# ABSTRACT: A set of useful functions
+$CracTools::Utils::VERSION = '1.031';
 use strict;
 use warnings;
 
 use Carp;
 
-=head2 reverseComplement
-
-  Arg [1] : String - a DNA sequence
-  Example : $reverse = reverseComplement('ATGC');
-  Description : Reverse complemente the sequence in argument.
-                For example : reverse_comptement('ATGC') returns : 'GCAT'.
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub reverseComplement($) {
   my $dna = shift;
@@ -111,16 +99,6 @@ sub reverseComplement($) {
   return $revcomp;
 }
 
-=head2 reverse_tab
-
-  Arg [1] : String - a string with values separated with coma.
-  Example : $reverse = reverse_tab('2,1,1,1,0,0,1');
-  Description : Reverse the values of the string in argument.
-                For example : reverse_tab('1,2,0,1') returns : '1,0,2,1'.
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub reverse_tab($) {
   my $string = shift;
@@ -136,4 +114,73 @@ sub reverse_tab($) {
   return $newString;
 }
 
+
+my %conversion_hash = ( '+' => 1, '-' => '-1', '1' => '+', '-1' => '-');
+sub convertStrand($) {
+  my $strand = shift;
+  return $conversion_hash{$strand};
+}
+
 1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+CracTools::Utils - A set of useful functions
+
+=head1 VERSION
+
+version 1.031
+
+=head2 reverseComplement
+
+  Arg [1] : String - a DNA sequence
+  Example : $reverse = reverseComplement('ATGC');
+  Description : Reverse complemente the sequence in argument.
+                For example : reverse_comptement('ATGC') returns : 'GCAT'.
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 reverse_tab
+
+  Arg [1] : String - a string with values separated with coma.
+  Example : $reverse = reverse_tab('2,1,1,1,0,0,1');
+  Description : Reverse the values of the string in argument.
+                For example : reverse_tab('1,2,0,1') returns : '1,0,2,1'.
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 convertStrand
+
+  Arg [1] : Character - strand
+
+  Description : Retrun the strand converted + => 1 or 1 => +
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
+
+=item *
+
+Jérôme AUDOUX <jaudoux@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2014 by IRB/INSERM (Institut de Recherche en Biothérapie / Institut National de la Santé et de la Recherche Médicale).
+
+This is free software, licensed under:
+
+  CeCILL FREE SOFTWARE LICENSE AGREEMENT, Version 2.1 dated 2013-06-21
+
+=cut

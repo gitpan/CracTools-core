@@ -76,69 +76,19 @@
 #                                                                             #
 ###############################################################################
 
-=encoding utf8
-
-=head1 NAME
-
-CracTools::SAMReader::SAMline - The object for manipulation a SAM line.
-
-=head1 SYNOPSIS
-
-  use CracTools::SAMReader::SAMline;
-
-  $sam_line = CracTools::SAMReader::SAMline->new($line);
-
-=head1 DESCRIPTION
-
-An object for easy acces to SAM line fields. See SAM Specifications for more informations :
-http://samtools.sourceforge.net/SAM1.pdf
-
-=cut
 
 package CracTools::SAMReader::SAMline;
-
-
+{
+  $CracTools::SAMReader::SAMline::DIST = 'CracTools-core';
+}
+# ABSTRACT: The object for manipulation a SAM line.
+$CracTools::SAMReader::SAMline::VERSION = '1.031';
 use strict;
 use warnings;
 use Carp;
 
 use CracTools::Utils;
 
-=head1 Variables
-
-=head2 %flags
-
-SAM flags :
-
-=over 2
-
-=item * MULTIPLE_SEGMENTS => 1
-
-=item * PROPERLY_ALIGNED => 2
-
-=item * UNMAPPED => 4,
-
-=item * NEXT_UNMAPPED => 8,
-
-=item * REVERSE_COMPLEMENTED => 16,
-
-=item * NEXT_REVERSE_COMPLEMENTED => 32,
-
-=item * FIRST_SEGMENT => 64,
-
-=item * LAST_SEGMENT => 128,
-
-=item * SECONDARY_ALIGNMENT => 256,
-
-=item * QUALITY_CONTROLS_FAILED => 512,
-
-=item * PCR_DUPLICATED => 1024,
-
-=item * CHIMERIC_ALIGNMENT => 2048,
-
-=back
-
-=cut
 
 our %flags = ( MULTIPLE_SEGMENTS => 1,
             PROPERLY_ALIGNED => 2,
@@ -154,20 +104,7 @@ our %flags = ( MULTIPLE_SEGMENTS => 1,
             CHIMERIC_ALIGNMENT => 2048,
           );
 
-=head1 STATIC PARSING METHODS
 
-These methods can be used without creating an CracTools::SAMReader::SAMline object.
-They are designed to provided efficient performance when parsing huge SAM files,
-because creating object in Perl can be long and useless for some purposes.
-
-=cut
-
-=head2 hasEvent
-
-  Arg [1] : String - SAM line
-  Arg [2] : eventType
-
-=cut
 
 sub hasEvent {
   my ($line,$event_type) = @_;
@@ -175,18 +112,6 @@ sub hasEvent {
   return $line =~ /XE:Z:\d+:\d+:$event_type/i;
 }
 
-=head1 Methods
-
-=head2 new
-
-  Arg [1] : String - SAM line in TAB-separated format.
-
-  Example     : $sam_line = CracTools::SAMline->new$($line);
-  Description : Create a new CracTools::SAMline obect.
-  ReturnType  : CracTools::SAMline
-  Exceptions  : none
-
-=cut
 
 sub new {
   my $class = shift;
@@ -221,18 +146,6 @@ sub new {
   return $self;
 }
 
-=head2 isFlagged
-
-  Arg [1] : Integer - The flag to test (1,2,4,8, ... ,1024)
-
-  Example     : if($SAMline->isFlagged($fags{unmapped}) {
-                  DO_SOMETHING... 
-                };
-  Description : Test if the line has the flag in parameter setted.
-  ReturnType  : Boolean
-  Exceptions  : none
-
-=cut
 
 sub isFlagged {
   my $self = shift;
@@ -240,16 +153,6 @@ sub isFlagged {
   return $self->flag & $flag;
 }
 
-=head2 getStrand
-
-  Example     : $strand = $SAMline->getStrand(); 
-  Description : Return the strand of the SAMline :
-                - "1" if forward strand
-                - "-1" if reverse strand
-  ReturnType  : 1 or -1
-  Exceptions  : none
-
-=cut
 
 sub getStrand {
   my $self = shift;
@@ -260,12 +163,6 @@ sub getStrand {
   }
 }
 
-=head2 getOriginalSeq
-
-  Descrition   : Return the original sequence as it was in the FASTQ file.
-                 In fact we reverse complemente the sequence if flag 16 is raised.
-
-=cut
 
 sub getOriginalSeq {
   my $self = shift;
@@ -276,29 +173,12 @@ sub getOriginalSeq {
   }
 }
 
-=head2 getLocAsCracFormat
-
-  Example     : $loc = $SAMline->getLocAsCracFormat(); 
-  Description : Return the location of the sequence using CRAC format : "chr|strand,position".
-                For example : X|-1,2154520
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub getLocAsCracFormat {
   my $self = shift;
   return $self->rname."|".$self->getStrand.",".$self->pos;
 }
 
-=head2 getPatch
-
-  Description : If the SAMline has been modified, this method will generate
-                a patch in UnifiedDiff format that represent the changes.
-  ReturnType  : String (patch) if line has changed, False (0) either.
-  Exceptions  : none
-
-=cut
 
 sub getPatch {
   my $self = shift;
@@ -315,31 +195,13 @@ sub getPatch {
   }
 }
 
-=head1 GETTERS AND SETTERS
 
-=cut
-
-=head2 line
-
-  Description : Getterr for the whole SAMline as a string.
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub line {
   my $self = shift;
   return $self->{line};
 }
 
-=head2 updatedLine
-
-  Description : Getter/Setter for the updated line.
-                If there is not updated line, this method return
-                the original SAM line.
-  RetrunType  : String
-
-=cut
 
 sub updatedLine {
   my $self = shift;
@@ -354,13 +216,6 @@ sub updatedLine {
   }
 }
 
-=head2 qname
-
-  Description : Getter/Setter for attribute qname
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub qname {
   my $self = shift;
@@ -371,13 +226,6 @@ sub qname {
   return $self->{qname};
 }
 
-=head2 flag
-
-  Description : Getter/Setter for attribute flag
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub flag {
   my $self = shift;
@@ -388,13 +236,6 @@ sub flag {
   return $self->{flag};
 }
 
-=head2 rname
-
-  Description : Getter/Setter for attribute rname (chromosome for eucaryotes)
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub rname {
   my $self = shift;
@@ -405,26 +246,12 @@ sub rname {
   return $self->{rname};
 }
 
-=head2 chr
-
-  Description : Getter/Setter for attribute rname (Alias)
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub chr {
   my $self = shift;
   $self->rname(@_);
 }
 
-=head2 pos
-
-  Description : Getter/Setter for attribute pos (position of the sequence)
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub pos {
   my $self = shift;
@@ -435,13 +262,6 @@ sub pos {
   return $self->{pos};
 }
 
-=head2 mapq
-
-  Description : Getter/Setter for attribute mapq (mapping quality)
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub mapq {
   my $self = shift;
@@ -452,13 +272,6 @@ sub mapq {
   return $self->{mapq};
 }
 
-=head2 cigar
-
-  Description : Getter/Setter for attribute cigar (see SAM doc)
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub cigar {
   my $self = shift;
@@ -469,13 +282,6 @@ sub cigar {
   return $self->{cigar};
 }
 
-=head2 rnext
-
-  Description : Getter/Setter for attribute rnext (see SAM doc)
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub rnext {
   my $self = shift;
@@ -486,13 +292,6 @@ sub rnext {
   return $self->{rnext};
 }
 
-=head2 pnext
-
-  Description : Getter/Setter for attribute pnext (see SAM doc)
-  ReturnType  : Integer
-  Exceptions  : none
-
-=cut
 
 sub pnext {
   my $self = shift;
@@ -503,13 +302,6 @@ sub pnext {
   return $self->{pnext};
 }
 
-=head2 tlen
-
-  Description : Getter/Setter for attribute tlen (sequence length)
-  ReturnType  : Integer
-  Exceptions  : none
-
-=cut
 
 sub tlen {
   my $self = shift;
@@ -520,15 +312,6 @@ sub tlen {
   return $self->{tlen};
 }
 
-=head2 seq
-
-  Description : Getter/Setter for attribute seq (the sequence).
-                Please use getOriginalSeq if you want to retrieve the oriented
-                sequence, that what you need in most cases.
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub seq {
   my $self = shift;
@@ -539,13 +322,6 @@ sub seq {
   return $self->{seq};
 }
 
-=head2 qual
-
-  Description : Getter/Setter for attribute qual (sequence quality)
-  ReturnType  : String
-  Exceptions  : none
-
-=cut
 
 sub qual {
   my $self = shift;
@@ -556,13 +332,6 @@ sub qual {
   return $self->{qual};
 }
 
-=head2 getOptionalField
-
-  Example     : 
-  Description : 
-  ReturnType  : 
-
-=cut
 
 sub getOptionalField {
   my $self = shift;
@@ -572,19 +341,6 @@ sub getOptionalField {
 }
 
 
-=head2 getChimericAlignments
-
-  Description : Parser of SA fields of SAM file in order to find chimeric reads
-  ReturnType  : Array reference
-                Elements are hash [ chr    => String, 
-                                    pos    => int, 
-                                    strand => 1/-1, 
-                                    cigar  => String,
-                                    mapq   => int,
-                                    edist  => int
-                                  ]
-
-=cut
 
 sub getChimericAlignments {
     my $self = shift;
@@ -613,19 +369,6 @@ sub getChimericAlignments {
     return undef;
 }
 
-=head2 getCigarOperatorsCount
-
-  Example     : my %cigar_counts = %{ $sam_line->getCigarOperatorsCount() };
-                print "nb mismatches; ",$cigar_counts{X},"\n";
-  Description : Return a hash reference where the keys are the cigar operators and the values
-                the sum of length associated for each operator.
-                For cigar 5S3M1X2M10S, getCigarOperatorsCounts() will retrun :
-                { 'S' => 15,
-                  'M' => 5,
-                  'X' => 1,
-                };
-  ReturnType  : Hash reference 
-=cut
 
 sub getCigarOperatorsCount {
   my $self = shift;
@@ -639,13 +382,6 @@ sub getCigarOperatorsCount {
   return \%ops_occ;
 }
 
-=head2 pSupport
-
-  Description : Return the support profile of the read if the SAM file has been generated with
-                CRAC option --detailed
-  ReturnType  : String
-
-=cut
 
 sub pSupport {
   my $self = shift;
@@ -653,13 +389,6 @@ sub pSupport {
   return $self->{sam_detailed}{p_support};
 }
 
-=head2 pLoc
-
-  Description : Return the location profile of the read if the SAM file has been generated with
-                CRAC option --detailed
-  ReturnType  : String
-
-=cut
 
 sub pLoc {
   my $self = shift;
@@ -667,13 +396,6 @@ sub pLoc {
   return $self->{sam_detailed}{p_loc};
 }
 
-=head2 pairedChimera
-
-  Description : return the chimeric coordinates of the paired chimera associated to this read if there is one
-
-  ReturnType  : array(chr1,pos1,strand1,chr2,pos2,strand2) or undef
-
-=cut
 
 sub pairedChimera {
   my $self = shift;
@@ -686,18 +408,6 @@ sub pairedChimera {
   }
 }
 
-=head2 isPairedClassified
-
-  Arg [1] : String - The class to test :
-            - "unique"
-            - "duplicated"
-            - "multiple"
-
-  Description : Test paired-end read clasification
-
-  ReturnType  : Boolean
-
-=cut
 
 sub isPairedClassified {
   my $self = shift;
@@ -713,22 +423,6 @@ sub isPairedClassified {
 }
 
 
-=head2 genericInfo
-  
-  [1] : Key of the generic info
-  [2] : (Optional) Value of the generic info
-
-  Description : Getter/Setter enable to store additional (generic) information 
-                about the SAMline as a Key/Value. 
-  Example : # Set a generic info
-            $read->genericInfo("foo","bar")
-
-            # Get a generic info
-            print $read->genericInfo("foo"); # this will print "bar"
-  ReturnType : ?
-  Exceptions : none
-
-=cut
 
 sub genericInfo {
   my ($self,$key,$value) = @_;
@@ -741,23 +435,6 @@ sub genericInfo {
   }
 }
 
-=head2 isClassified
-
-  Arg [1] : String - The class to test :
-            - "unique"
-            - "duplicated"
-            - "multiple"
-            - "normal"
-            - "almostNormal"
-
-  Example     : if($sam_line->isClassified('normal')) {
-                  DO_SOMETHING;
-                }
-  Description : Test if the line is classified according to the parameter value.
-  ReturnType  : Boolean
-  Exceptions  : none
-
-=cut
 
 sub isClassified {
   my $self = shift;
@@ -780,27 +457,6 @@ sub isClassified {
   }
 }
 
-=head2 events
-
-  Arg [1] : String - The event type to return :
-            - Junction
-            - Ins
-            - Del
-            - SNP
-            - Error
-            - Chimera
-            - Undetermined
-            - BioUndetermined
-            - ... (see CRAC SAM format specifications for more informations).
-  Example     : my @junctions = @{$line->events('Junction')};
-                foreach my $junction (@junctions) {
-                  print "Foud Junction : [type : $junction->{type}, loc : $junction->{loc}, gap : $junction->{gap}]\n";
-                } 
-  Description : Return all events of the type specified in parameter
-  ReturnType  : Array reference
-  Exceptions  : none
-
-=cut
 
 sub events {
   my $self = shift;
@@ -813,16 +469,6 @@ sub events {
   }
 }
 
-=head1 PRIVATE METHODS
-
-=head2 loadEvents
-
-  Example     : $sam_line->loadEvents();
-  Description : Loading of events attributes
-  ReturnType  : none
-  Exceptions  : none
-
-=cut
 
 sub loadEvents {
   my $self = shift;
@@ -907,16 +553,6 @@ sub loadEvents {
   }
 }
 
-=head2 addEvent
-
-  Arg [1] : String - The event type
-  Arg [2] : Hash reference - The event object
-  Example     : $line->addEvent($event_type,\%event); 
-  Description : Return all events of the type specified in parameter
-  ReturnType  : none
-  Exceptions  : none
-
-=cut
 
 sub addEvent {
   my $self = shift;
@@ -929,13 +565,6 @@ sub addEvent {
   }
 }
 
-=head2 removeEvent 
-
-  Arg [1] : Hash reference - The event object
-
-  Description : Remove the event from the event hash and from the line.
-
-=cut
 
 sub removeEvent {
   my $self = shift;
@@ -954,10 +583,6 @@ sub removeEvent {
   return 0;
 }
 
-=head2 updateEvent
-  
-
-=cut
 
 sub updateEvent {
   my $self = shift;
@@ -1032,14 +657,6 @@ sub updateEvent {
   }
 }
 
-=head2 loadSamDetailed
-
-  Example     : $sam_line->loadSamDetailed();
-  Description : Loading of sam detaileds attributes
-  ReturnType  : none
-  Exceptions  : none
-
-=cut
 
 sub loadSamDetailed {
   my $self = shift;
@@ -1061,14 +678,6 @@ sub loadSamDetailed {
   }
 }
 
-=head2 loadPaired
-
-  Example     : $sam_line->loadPaired();
-  Description : Loading of sam detaileds attributes
-  ReturnType  : none
-  Exceptions  : none
-
-=cut
 
 sub loadPaired {
   my $self = shift;
@@ -1083,6 +692,383 @@ sub loadPaired {
   }
 }
 
+
+sub expandCracLoc {
+  my $loc = shift;
+  my($chr,$strand,$pos) = $loc =~ /(\S+)\|(\S+)?,(\S+)?/; 
+  return ($chr,$pos,$strand);
+}
+
+
+sub compressCracLoc {
+  my ($chr,$pos,$strand) = @_;
+  confess("Missing argument") unless defined $chr && defined $pos && defined $strand;
+  return $chr."|".$strand.",".$pos;
+}
+
+1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+CracTools::SAMReader::SAMline - The object for manipulation a SAM line.
+
+=head1 VERSION
+
+version 1.031
+
+=head1 SYNOPSIS
+
+  use CracTools::SAMReader::SAMline;
+
+  $sam_line = CracTools::SAMReader::SAMline->new($line);
+
+=head1 DESCRIPTION
+
+An object for easy acces to SAM line fields. See SAM Specifications for more informations :
+http://samtools.sourceforge.net/SAM1.pdf
+
+=head1 Variables
+
+=head2 %flags
+
+SAM flags :
+
+=over 2
+
+=item * MULTIPLE_SEGMENTS => 1
+
+=item * PROPERLY_ALIGNED => 2
+
+=item * UNMAPPED => 4,
+
+=item * NEXT_UNMAPPED => 8,
+
+=item * REVERSE_COMPLEMENTED => 16,
+
+=item * NEXT_REVERSE_COMPLEMENTED => 32,
+
+=item * FIRST_SEGMENT => 64,
+
+=item * LAST_SEGMENT => 128,
+
+=item * SECONDARY_ALIGNMENT => 256,
+
+=item * QUALITY_CONTROLS_FAILED => 512,
+
+=item * PCR_DUPLICATED => 1024,
+
+=item * CHIMERIC_ALIGNMENT => 2048,
+
+=back
+
+=head1 STATIC PARSING METHODS
+
+These methods can be used without creating an CracTools::SAMReader::SAMline object.
+They are designed to provided efficient performance when parsing huge SAM files,
+because creating object in Perl can be long and useless for some purposes.
+
+=head2 hasEvent
+
+  Arg [1] : String - SAM line
+  Arg [2] : eventType
+
+=head1 Methods
+
+=head2 new
+
+  Arg [1] : String - SAM line in TAB-separated format.
+
+  Example     : $sam_line = CracTools::SAMline->new$($line);
+  Description : Create a new CracTools::SAMline obect.
+  ReturnType  : CracTools::SAMline
+  Exceptions  : none
+
+=head2 isFlagged
+
+  Arg [1] : Integer - The flag to test (1,2,4,8, ... ,1024)
+
+  Example     : if($SAMline->isFlagged($fags{unmapped}) {
+                  DO_SOMETHING... 
+                };
+  Description : Test if the line has the flag in parameter setted.
+  ReturnType  : Boolean
+  Exceptions  : none
+
+=head2 getStrand
+
+  Example     : $strand = $SAMline->getStrand(); 
+  Description : Return the strand of the SAMline :
+                - "1" if forward strand
+                - "-1" if reverse strand
+  ReturnType  : 1 or -1
+  Exceptions  : none
+
+=head2 getOriginalSeq
+
+  Descrition   : Return the original sequence as it was in the FASTQ file.
+                 In fact we reverse complemente the sequence if flag 16 is raised.
+
+=head2 getLocAsCracFormat
+
+  Example     : $loc = $SAMline->getLocAsCracFormat(); 
+  Description : Return the location of the sequence using CRAC format : "chr|strand,position".
+                For example : X|-1,2154520
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 getPatch
+
+  Description : If the SAMline has been modified, this method will generate
+                a patch in UnifiedDiff format that represent the changes.
+  ReturnType  : String (patch) if line has changed, False (0) either.
+  Exceptions  : none
+
+=head1 GETTERS AND SETTERS
+
+=head2 line
+
+  Description : Getterr for the whole SAMline as a string.
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 updatedLine
+
+  Description : Getter/Setter for the updated line.
+                If there is not updated line, this method return
+                the original SAM line.
+  RetrunType  : String
+
+=head2 qname
+
+  Description : Getter/Setter for attribute qname
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 flag
+
+  Description : Getter/Setter for attribute flag
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 rname
+
+  Description : Getter/Setter for attribute rname (chromosome for eucaryotes)
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 chr
+
+  Description : Getter/Setter for attribute rname (Alias)
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 pos
+
+  Description : Getter/Setter for attribute pos (position of the sequence)
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 mapq
+
+  Description : Getter/Setter for attribute mapq (mapping quality)
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 cigar
+
+  Description : Getter/Setter for attribute cigar (see SAM doc)
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 rnext
+
+  Description : Getter/Setter for attribute rnext (see SAM doc)
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 pnext
+
+  Description : Getter/Setter for attribute pnext (see SAM doc)
+  ReturnType  : Integer
+  Exceptions  : none
+
+=head2 tlen
+
+  Description : Getter/Setter for attribute tlen (sequence length)
+  ReturnType  : Integer
+  Exceptions  : none
+
+=head2 seq
+
+  Description : Getter/Setter for attribute seq (the sequence).
+                Please use getOriginalSeq if you want to retrieve the oriented
+                sequence, that what you need in most cases.
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 qual
+
+  Description : Getter/Setter for attribute qual (sequence quality)
+  ReturnType  : String
+  Exceptions  : none
+
+=head2 getOptionalField
+
+  Example     : 
+  Description : 
+  ReturnType  : 
+
+=head2 getChimericAlignments
+
+  Description : Parser of SA fields of SAM file in order to find chimeric reads
+  ReturnType  : Array reference
+                Elements are hash [ chr    => String, 
+                                    pos    => int, 
+                                    strand => 1/-1, 
+                                    cigar  => String,
+                                    mapq   => int,
+                                    edist  => int
+                                  ]
+
+=head2 getCigarOperatorsCount
+
+  Example     : my %cigar_counts = %{ $sam_line->getCigarOperatorsCount() };
+                print "nb mismatches; ",$cigar_counts{X},"\n";
+  Description : Return a hash reference where the keys are the cigar operators and the values
+                the sum of length associated for each operator.
+                For cigar 5S3M1X2M10S, getCigarOperatorsCounts() will retrun :
+                { 'S' => 15,
+                  'M' => 5,
+                  'X' => 1,
+                };
+  ReturnType  : Hash reference 
+
+=head2 pSupport
+
+  Description : Return the support profile of the read if the SAM file has been generated with
+                CRAC option --detailed
+  ReturnType  : String
+
+=head2 pLoc
+
+  Description : Return the location profile of the read if the SAM file has been generated with
+                CRAC option --detailed
+  ReturnType  : String
+
+=head2 pairedChimera
+
+  Description : return the chimeric coordinates of the paired chimera associated to this read if there is one
+
+  ReturnType  : array(chr1,pos1,strand1,chr2,pos2,strand2) or undef
+
+=head2 isPairedClassified
+
+  Arg [1] : String - The class to test :
+            - "unique"
+            - "duplicated"
+            - "multiple"
+
+  Description : Test paired-end read clasification
+
+  ReturnType  : Boolean
+
+=head2 genericInfo
+
+  [1] : Key of the generic info
+  [2] : (Optional) Value of the generic info
+
+  Description : Getter/Setter enable to store additional (generic) information 
+                about the SAMline as a Key/Value. 
+  Example : # Set a generic info
+            $read->genericInfo("foo","bar")
+
+            # Get a generic info
+            print $read->genericInfo("foo"); # this will print "bar"
+  ReturnType : ?
+  Exceptions : none
+
+=head2 isClassified
+
+  Arg [1] : String - The class to test :
+            - "unique"
+            - "duplicated"
+            - "multiple"
+            - "normal"
+            - "almostNormal"
+
+  Example     : if($sam_line->isClassified('normal')) {
+                  DO_SOMETHING;
+                }
+  Description : Test if the line is classified according to the parameter value.
+  ReturnType  : Boolean
+  Exceptions  : none
+
+=head2 events
+
+  Arg [1] : String - The event type to return :
+            - Junction
+            - Ins
+            - Del
+            - SNP
+            - Error
+            - Chimera
+            - Undetermined
+            - BioUndetermined
+            - ... (see CRAC SAM format specifications for more informations).
+  Example     : my @junctions = @{$line->events('Junction')};
+                foreach my $junction (@junctions) {
+                  print "Foud Junction : [type : $junction->{type}, loc : $junction->{loc}, gap : $junction->{gap}]\n";
+                } 
+  Description : Return all events of the type specified in parameter
+  ReturnType  : Array reference
+  Exceptions  : none
+
+=head1 PRIVATE METHODS
+
+=head2 loadEvents
+
+  Example     : $sam_line->loadEvents();
+  Description : Loading of events attributes
+  ReturnType  : none
+  Exceptions  : none
+
+=head2 addEvent
+
+  Arg [1] : String - The event type
+  Arg [2] : Hash reference - The event object
+  Example     : $line->addEvent($event_type,\%event); 
+  Description : Return all events of the type specified in parameter
+  ReturnType  : none
+  Exceptions  : none
+
+=head2 removeEvent 
+
+  Arg [1] : Hash reference - The event object
+
+  Description : Remove the event from the event hash and from the line.
+
+=head2 updateEvent
+
+=head2 loadSamDetailed
+
+  Example     : $sam_line->loadSamDetailed();
+  Description : Loading of sam detaileds attributes
+  ReturnType  : none
+  Exceptions  : none
+
+=head2 loadPaired
+
+  Example     : $sam_line->loadPaired();
+  Description : Loading of sam detaileds attributes
+  ReturnType  : none
+  Exceptions  : none
+
 =head2 expandCracLoc
 
   Arg [1] : String - Localisation in crac format : Chromosome|strand,position
@@ -1091,14 +1077,6 @@ sub loadPaired {
   Description : Extract Chromosme, position and strand as separated variable from
                 the localisation in CRAC format.
   ReturnType  : Array($chromosome,$position,$strand)
-
-=cut
-
-sub expandCracLoc {
-  my $loc = shift;
-  my($chr,$strand,$pos) = $loc =~ /(\S+)\|(\S+)?,(\S+)?/; 
-  return ($chr,$pos,$strand);
-}
 
 =head2 compressCracLoc
 
@@ -1109,51 +1087,26 @@ sub expandCracLoc {
   Description : Reverse function of "expandCracLoc"
   ReturnType  : String (localisation in CRAC format)
 
-=cut
-
-sub compressCracLoc {
-  my ($chr,$pos,$strand) = @_;
-  confess("Missing argument") unless defined $chr && defined $pos && defined $strand;
-  return $chr."|".$strand.",".$pos;
-}
-
 =head1 AUTHORS
 
-Jerome AUDOUX E<lt>L<jerome.audoux@etud.univ-montp2.fr|mailto:jerome.audoux@univ-montp2.fr>E<gt>.
+=over 4
+
+=item *
+
+Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
+
+=item *
+
+Jérôme AUDOUX <jaudoux@cpan.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2012-2013 -- IRB/INSERM
-                           (Institut de Recherche en Biothérapie /
-                            Institut National de la Santé et de la
-                            Recherche Médicale)
-                           LIRMM/UM2
-                           (Laboratoire d'Informatique, de Robotique et de
-                            Microélectronique de Montpellier /
-                            Université de Montpellier 2)
+This software is Copyright (c) 2014 by IRB/INSERM (Institut de Recherche en Biothérapie / Institut National de la Santé et de la Recherche Médicale).
 
-=head2 FRENCH
+This is free software, licensed under:
 
-Ce fichier  fait partie  du Pipeline  de traitement  de données NGS de la
-plateforme ATGC labélisée par le GiS IBiSA.
-
-Ce logiciel est régi  par la licence CeCILL  soumise au droit français et
-respectant les principes  de diffusion des logiciels libres.  Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions de
-la licence CeCILL  telle que diffusée par le CEA,  le CNRS et l'INRIA sur
-le site "http://www.cecill.info".
-
-=head2 ENGLISH
-
-This File is part of the NGS data processing Pipeline of the ATGC
-accredited by the IBiSA GiS.
-
-This software is governed by the CeCILL license under French law and
-abiding by the rules of distribution of free software. You can use,
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info".
+  CeCILL FREE SOFTWARE LICENSE AGREEMENT, Version 2.1 dated 2013-06-21
 
 =cut
-
-1;

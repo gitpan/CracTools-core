@@ -14,21 +14,22 @@ mix_summarize_crac - a script to outline % locations per library
 Usage: 
   mix_summarize_crac [options] file1 file2 file3
 
-Option : -o output_file_name
+Main option :
+
+  -globalonly      	- Show only global mapping values
+  -explainedsonly   - Show only explained mapping values
+  -output filename  - the filename the stats are written (STDOUT by default)
+  -help             - help / usage
+  -man              - print man page
 
 =head1 DESCRIPTION
 
 This script will create a report with statistic data.
+
 The options are:
-	-globalonly		- Show only global mapping values
-	-explainedsonly		- Show only explained mapping values
-	-output filename	- the filename the stats are written (STDOUT by default)
-#	-graph name					- output graph also with filename name [default= libname.graph.png]
-	-namecolumns 'columns header'		- Split filename with /-/, and set header columns (ex: Exp-Nb-lib)
-	-separator char		- Separator (default -) to use to split filename and namecolumns
-	-verbose value		- verbose mode (2=DEBUG)
-	-help				- help / usage
-	-man				- print man page
+  -namecolumns 'columns header'   - Split filename with /-/, and set header columns (ex: Exp-Nb-lib)
+  -separator char                 - Separator (default -) to use to split filename and namecolumns
+  -verbose value                  - verbose mode (2=DEBUG)
 
 =head1 AUTHOR
 
@@ -36,7 +37,7 @@ Anthony Boureux <Anthony.boureux@univ-montp2.fr>
 
 =head1 TODO
 
-	 generate graph
+  - generate a %mapping.. graph
 
 =cut
 
@@ -55,7 +56,7 @@ my $verbose = 0;
 my $output;# = \*STDOUT; not good for getoptions
 my %patterns = (
 	'global' => ['Single', 'Duplication', 'Multiple', 'None'],
-	'explained' => ['Explainable', 'Repetition', 'Normal', 'Almost-Normal', 'Sequence-Errors', 'SNV', 'Short-Indel', 'Splice', 'Weak-Splice', 'Chimera', 'Paired-end Chimera', 'Bio-Undetermined', 'Undetermined', 'Nothing']
+	'explained' => ['Explainable', 'Repetition', 'Normal', 'Almost-Normal', 'Sequence-Errors', 'SNV', 'Short-Indel', 'Splice', 'Weak-Splice', 'Chimera', 'Paired-end chimera', 'Bio-Undetermined', 'Undetermined', 'Nothing']
 );
 
 my $extension='';
@@ -101,11 +102,11 @@ foreach my $file (@ARGV) {
 	foreach my $type (keys %patterns) {
 		foreach my $pattern (@{$patterns{$type}}) {
 			print STDERR "pat= $pattern\n" if ($DEBUG);
-			($reads{$file}{$type}{$pattern}) = ($contents =~ /$pattern: (\d+)/sm);
+			($reads{$file}{$type}{$pattern}) = ($contents =~ /$pattern: (\d+)/ism);
 			print STDERR "val=", $reads{$file}{$type}{$pattern}, "\n" if ($DEBUG);
 		}
 	}
-	my ($total_analyze) = ($contents =~ /Total number of reads analyzed: (\d+)/sm);
+	my ($total_analyze) = ($contents =~ /Total number of reads analyzed: (\d+)/ism);
 
 	# calculate total
 	foreach my $type (keys %{$reads{$file}}) {

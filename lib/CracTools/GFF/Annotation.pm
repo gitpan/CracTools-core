@@ -76,53 +76,15 @@
 #                                                                             #
 ###############################################################################
 
-=head1 NAME
-
-CracTools::GFF::Annotation - Parse GFF lines.
-
-=head1 SYNOPSIS
-
-Usage:
-
-  use CracTools::GFF::Query;
-
-  # Creating the reader
-  my $gffQuery = CracTools::GFF::Query->new('annotations.gff');
-
-  my @annotations = $gffQuery->fetchByLocation('1',298345,'+');
-
-  foreach my $gff_line (@annotations) {
-    my $annotation = CracTools::GFF::Annotation->new($gff_line);
-    print "Gene_id : ",$annotation->attribute('gene_id'),"\n";
-  }
-
-=head1 DESCRIPTION
-
-CracTools::GFF::Annotataion is an object to parse and access GFF line's fields.
-
-=cut
 
 package CracTools::GFF::Annotation;
-
+{
+  $CracTools::GFF::Annotation::DIST = 'CracTools-core';
+}
+# ABSTRACT: Parse GFF lines.
+$CracTools::GFF::Annotation::VERSION = '1.031';
 use Carp;
 
-=head1 METHODS
-
-=head2 new
-
-  Arg [1] : String - $line
-            GFF line
-  Arg [2] : String - $format (optional) - default 'gff2'
-            GFF format (gff2 or gff3)
-
-  Example     : my $annotation = CracTools::GFF::Annotation->new($gff_line);
-  Description : Create a new CracTools::GFF::Annotation object
-                If a gff line is passed in argument, the line will be parsed
-                and loaded.
-  ReturnType  : CracTools::GFF::Query
-  Exceptions  : none
-
-=cut
 
 sub new {
   my $class = shift;
@@ -181,13 +143,6 @@ sub _init {
 
 }
 
-=head1 GETTERS AND SETTERS
-
-=head2 chr
-
-  Description : Getter/setter for attribute chr
-
-=cut
 
 sub chr {
   my $self = shift;
@@ -198,11 +153,6 @@ sub chr {
   return $self->{chr};
 }
 
-=head2 source
-
-  Description : Getter/setter for attribute source
-
-=cut
 
 sub source {
   my $self = shift;
@@ -213,11 +163,6 @@ sub source {
   return $self->{source};
 }
 
-=head2 feature
-
-  Description : Getter/setter for attribute feature
-
-=cut
 
 sub feature {
   my $self = shift;
@@ -228,11 +173,6 @@ sub feature {
   return $self->{feature};
 }
 
-=head2 start
-
-  Description : Getter/setter for attribute start
-
-=cut
 
 sub start {
   my $self = shift;
@@ -243,11 +183,6 @@ sub start {
   return $self->{start};
 }
 
-=head2 end
-
-  Description : Getter/setter for attribute end
-
-=cut
 
 sub end {
   my $self = shift;
@@ -258,11 +193,6 @@ sub end {
   return $self->{end};
 }
 
-=head2 score
-
-  Description : Getter/setter for attribute score
-
-=cut
 
 sub score {
   my $self = shift;
@@ -273,11 +203,6 @@ sub score {
   return $self->{score};
 }
 
-=head2 strand
-
-  Description : Getter/setter for attribute strand ('+','-' convention)
-
-=cut
 
 sub strand {
   my $self = shift;
@@ -288,22 +213,12 @@ sub strand {
   return $self->{strand};
 }
 
-=head2 gffStrand
-
-  Description : Return strand using "1","-1" convention.
-
-=cut
 
 sub gffStrand {
   my $self = shift;
   return convertStrand($self->{strand});
 }
 
-=head2 phase
-
-  Description : Getter/setter for attribute phase
-
-=cut
 
 sub phase {
   my $self = shift;
@@ -314,12 +229,6 @@ sub phase {
   return $self->{phase};
 }
 
-=head2 parents
-
-  Description : Getter for attribute parents.
-  ReturnType  : Array of strings with parents ID
-
-=cut
 
 sub parents {
   my $self = shift;
@@ -330,11 +239,6 @@ sub parents {
   }
 }
 
-=head2 attribute
-
-  Description : Getter/setter for attribute attribute
-
-=cut
 
 sub attribute {
   my $self = shift;
@@ -350,15 +254,6 @@ sub attribute {
   }
 }
 
-=head1 STATIC METHODS
-
-=head2 convertStrand
-  
-  Arg [1] : Character - strand using '+' and '-' signs
-
-  Description : Retrun the strand using the (1,-1) convention
-                instead of the ('+','-') convention of GFF files.
-=cut
 
 sub convertStrand($) {
   my $strand = shift;
@@ -367,3 +262,133 @@ sub convertStrand($) {
 }
 
 1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+CracTools::GFF::Annotation - Parse GFF lines.
+
+=head1 VERSION
+
+version 1.031
+
+=head1 SYNOPSIS
+
+Usage:
+
+  use CracTools::GFF::Query;
+
+  # Creating the reader
+  my $gffQuery = CracTools::GFF::Query->new('annotations.gff');
+
+  my @annotations = $gffQuery->fetchByLocation('1',298345,'+');
+
+  foreach my $gff_line (@annotations) {
+    my $annotation = CracTools::GFF::Annotation->new($gff_line);
+    print "Gene_id : ",$annotation->attribute('gene_id'),"\n";
+  }
+
+=head1 DESCRIPTION
+
+CracTools::GFF::Annotataion is an object to parse and access GFF line's fields.
+
+=head1 METHODS
+
+=head2 new
+
+  Arg [1] : String - $line
+            GFF line
+  Arg [2] : String - $format (optional) - default 'gff2'
+            GFF format (gff2 or gff3)
+
+  Example     : my $annotation = CracTools::GFF::Annotation->new($gff_line);
+  Description : Create a new CracTools::GFF::Annotation object
+                If a gff line is passed in argument, the line will be parsed
+                and loaded.
+  ReturnType  : CracTools::GFF::Query
+  Exceptions  : none
+
+=head1 GETTERS AND SETTERS
+
+=head2 chr
+
+  Description : Getter/setter for attribute chr
+
+=head2 source
+
+  Description : Getter/setter for attribute source
+
+=head2 feature
+
+  Description : Getter/setter for attribute feature
+
+=head2 start
+
+  Description : Getter/setter for attribute start
+
+=head2 end
+
+  Description : Getter/setter for attribute end
+
+=head2 score
+
+  Description : Getter/setter for attribute score
+
+=head2 strand
+
+  Description : Getter/setter for attribute strand ('1','-1' convention)
+
+=head2 gffStrand
+
+  Description : Return strand using "+","-" convention.
+
+=head2 phase
+
+  Description : Getter/setter for attribute phase
+
+=head2 parents
+
+  Description : Getter for attribute parents.
+  ReturnType  : Array of strings with parents ID
+
+=head2 attribute
+
+  Description : Getter/setter for attribute attribute
+
+=head1 STATIC METHODS
+
+=head2 convertStrand
+
+  Arg [1] : Character - strand using '+' and '-' signs
+
+  Description : Retrun the strand using the (1,-1) convention
+                instead of the ('+','-') convention of GFF files.
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
+
+=item *
+
+Jérôme AUDOUX <jaudoux@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2014 by IRB/INSERM (Institut de Recherche en Biothérapie / Institut National de la Santé et de la Recherche Médicale).
+
+This is free software, licensed under:
+
+  CeCILL FREE SOFTWARE LICENSE AGREEMENT, Version 2.1 dated 2013-06-21
+
+=cut

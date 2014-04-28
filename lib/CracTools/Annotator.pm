@@ -76,38 +76,22 @@
 #                                                                             #
 ###############################################################################
 
-=head1 NAME
-
-CracTools::Annotator - Generic annotation base on CracTools::GFF::Query
-
-=cut
-
 package CracTools::Annotator;
-
+{
+  $CracTools::Annotator::DIST = 'CracTools-core';
+}
+# ABSTRACT: Generic annotation base on CracTools::GFF::Query
+$CracTools::Annotator::VERSION = '1.031';
 use strict;
 use warnings;
 
 use Carp;
 use Data::Dumper;
 use CracTools::GFF::Annotation;
-use CracTools::GFF::Query;
+#use CracTools::GFF::Query;
+use CracTools::Interval::Query;
 use CracTools::Const;
 
-=head1 METHODS
-
-=head2 new
-
-  Arg [1] : String - $gff_file
-            GFF file to perform annotation
-
-  Example     : my $annotation = CracTools::GFF::Annotation->new($gff_line);
-  Description : Create a new CracTools::GFF::Annotation object
-                If a gff line is passed in argument, the line will be parsed
-                and loaded.
-  ReturnType  : CracTools::GFF::Query
-  Exceptions  : none
-
-=cut
 
 sub new {
   my $class = shift;
@@ -126,18 +110,6 @@ sub new {
   return $self;
 }
 
-=head2 foundGene
-
-  Arg [1] : String - chr
-  Arg [2] : String - pos_start
-  Arg [3] : String - pos_end
-  Arg [4] : String - strand
-
-  Description : Return true if there is an exon of a gene is this interval
-  ReturnType  : Boolean
-  Exceptions  : none
-
-=cut
 
 sub foundGene {
   my $self = shift;
@@ -146,20 +118,6 @@ sub foundGene {
   return @candidates > 0;
 }
 
-=head2 foundSameGene
-
-  Arg [1] : String - chr
-  Arg [2] : String - pos_start1
-  Arg [3] : String - pos_end1
-  Arg [4] : String - pos_start2
-  Arg [5] : String - pos_end1
-  Arg [6] : String - strand
-
-  Description : Return true if a gene is the same gene is found is the two intervals.
-  ReturnType  : Boolean
-  Exceptions  : none
-
-=cut
 
 sub foundSameGene {
   my $self = shift;
@@ -191,19 +149,6 @@ sub foundSameGene {
   return $found_same_gene;
 }
 
-=head2 getBestAnnotationCandidate
-
-  Arg [1] : String - chr
-  Arg [2] : String - pos_start
-  Arg [3] : String - pos_end
-  Arg [4] : String - strand
-  Arg [5] : (Optional) Subroutine - see C<getCandidatePriorityDefault> for more details
-
-  Description : Return best annotation candidate according to the priorities given
-                by the subroutine in argument.
-  ReturnType  : Hash( feature_name => CracTools::GFF::Annotation, ...), Int(priority), String(type)
-
-=cut
 
 sub getBestAnnotationCandidate {
   my $self = shift;
@@ -226,18 +171,6 @@ sub getBestAnnotationCandidate {
   return $best_candidate,$best_priority,$best_type;
 }
 
-=head2 getAnnotationCandidates
-
-  Arg [1] : String - chr
-  Arg [2] : String - pos_start
-  Arg [3] : String - pos_end
-  Arg [4] : String - strand
-
-  Description : Return an array with all annotation candidates overlapping the
-                chromosomic region.
-  ReturnType  : Array of Hash( feature_name => CracTools::GFF::Annotation, ...)
-
-=cut
 
 sub getAnnotationCandidates {
   my $self = shift;
@@ -268,20 +201,6 @@ sub getAnnotationCandidates {
   return @candidates;
 }
 
-=head2 getCandidatePriorityDefault
-
-  Arg [1] : String - pos_start
-  Arg [2] : String - pos_end
-  Arg [3] : hash - candidate
-
-  Description : Default method used to give a priority to a candidate.
-                You can create your own priority method to fit your specific need
-                for selecting the best annotation.
-                The best priority is 0. A priority of -1 means that this candidate
-                should be avoided.
-  ReturnType  : Array ($priority,$type) where $priority is an integer and $type a string
-
-=cut
 
 sub getCandidatePriorityDefault {
   my ($pos_start,$pos_end,$candidate) = @_;
@@ -318,23 +237,127 @@ sub getCandidatePriorityDefault {
   return ($priority,$type);
 }
 
+
+sub _init {
+  my $self = shift;
+
+  # Create a GFF file to query exons
+  my $gff_query = CracTools::Interval::Query->new(file => $self->{gff_file}, type => 'gff');
+  $self->{gff_query} = $gff_query;
+
+}
+
+
+sub _constructCandidate {
+  my ($annot_id,$candidate,$annot_hash) = @_;
+  $candidate->{$annot_hash->{$annot_id}->feature} = $annot_hash->{$annot_id};
+  foreach my $annot (values %{$annot_hash}) {
+    my @parents = $annot->parents;
+    foreach my $parent (@parents) {
+      if($parent eq $annot_id) {
+        _constructCandidate($annot->attribute('ID'),$candidate,$annot_hash);
+      }
+    }
+  }
+  return $candidate;
+}
+
+1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+CracTools::Annotator - Generic annotation base on CracTools::GFF::Query
+
+=head1 VERSION
+
+version 1.031
+
+=head1 METHODS
+
+=head2 new
+
+  Arg [1] : String - $gff_file
+            GFF file to perform annotation
+
+  Example     : my $annotation = CracTools::GFF::Annotation->new($gff_line);
+  Description : Create a new CracTools::GFF::Annotation object
+                If a gff line is passed in argument, the line will be parsed
+                and loaded.
+  ReturnType  : CracTools::GFF::Query
+  Exceptions  : none
+
+=head2 foundGene
+
+  Arg [1] : String - chr
+  Arg [2] : String - pos_start
+  Arg [3] : String - pos_end
+  Arg [4] : String - strand
+
+  Description : Return true if there is an exon of a gene is this interval
+  ReturnType  : Boolean
+  Exceptions  : none
+
+=head2 foundSameGene
+
+  Arg [1] : String - chr
+  Arg [2] : String - pos_start1
+  Arg [3] : String - pos_end1
+  Arg [4] : String - pos_start2
+  Arg [5] : String - pos_end1
+  Arg [6] : String - strand
+
+  Description : Return true if a gene is the same gene is found is the two intervals.
+  ReturnType  : Boolean
+  Exceptions  : none
+
+=head2 getBestAnnotationCandidate
+
+  Arg [1] : String - chr
+  Arg [2] : String - pos_start
+  Arg [3] : String - pos_end
+  Arg [4] : String - strand
+  Arg [5] : (Optional) Subroutine - see C<getCandidatePriorityDefault> for more details
+
+  Description : Return best annotation candidate according to the priorities given
+                by the subroutine in argument.
+  ReturnType  : Hash( feature_name => CracTools::GFF::Annotation, ...), Int(priority), String(type)
+
+=head2 getAnnotationCandidates
+
+  Arg [1] : String - chr
+  Arg [2] : String - pos_start
+  Arg [3] : String - pos_end
+  Arg [4] : String - strand
+
+  Description : Return an array with all annotation candidates overlapping the
+                chromosomic region.
+  ReturnType  : Array of Hash( feature_name => CracTools::GFF::Annotation, ...)
+
+=head2 getCandidatePriorityDefault
+
+  Arg [1] : String - pos_start
+  Arg [2] : String - pos_end
+  Arg [3] : hash - candidate
+
+  Description : Default method used to give a priority to a candidate.
+                You can create your own priority method to fit your specific need
+                for selecting the best annotation.
+                The best priority is 0. A priority of -1 means that this candidate
+                should be avoided.
+  ReturnType  : Array ($priority,$type) where $priority is an integer and $type a string
+
 =head1 PRIVATE METHODS
 
 =head2 _init
 
   Description : init method, load GFF annotation into a
                 CracTools::GFF::Query object.
-
-=cut
-
-sub _init {
-  my $self = shift;
-
-  # Create a GFF file to query exons
-  my $gff_query = CracTools::GFF::Query->new($self->{gff_file});
-  $self->{gff_query} = $gff_query;
-
-}
 
 =head2 _constructCandidate
 
@@ -352,20 +375,26 @@ sub _init {
                 values are CracTools::GFF::Annotation objects :
                 { feature => CracTools::GFF::Annotation, ...}
 
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
+
+=item *
+
+Jérôme AUDOUX <jaudoux@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2014 by IRB/INSERM (Institut de Recherche en Biothérapie / Institut National de la Santé et de la Recherche Médicale).
+
+This is free software, licensed under:
+
+  CeCILL FREE SOFTWARE LICENSE AGREEMENT, Version 2.1 dated 2013-06-21
+
 =cut
-
-sub _constructCandidate {
-  my ($annot_id,$candidate,$annot_hash) = @_;
-  $candidate->{$annot_hash->{$annot_id}->feature} = $annot_hash->{$annot_id};
-  foreach my $annot (values %{$annot_hash}) {
-    my @parents = $annot->parents;
-    foreach my $parent (@parents) {
-      if($parent eq $annot_id) {
-        _constructCandidate($annot->attribute('ID'),$candidate,$annot_hash);
-      }
-    }
-  }
-  return $candidate;
-}
-
-1;

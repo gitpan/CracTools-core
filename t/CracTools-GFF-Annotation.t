@@ -1,6 +1,6 @@
 #! /usr/bin/perl
 #
-use Test::More tests => 13;
+use Test::More tests => 14;
 use CracTools::GFF::Annotation;
 
 my $gff_line = "AB000123\tTwinscan\tCDS\t215991\t216028\t.\t-\t0\tgene_id ".'"AB000123.1"; transcript_id "AB00123.1.2"';
@@ -15,6 +15,7 @@ ok($gffAnnotation->end eq 216027,'end()'); # Convert to 0-based coordinate syste
 ok($gffAnnotation->score eq '.','score()');
 ok($gffAnnotation->strand == -1,'strand()');
 ok($gffAnnotation->phase eq 0,'phase()');
+ok($gffAnnotation->gffStrand eq '-', 'gffStrand()');
 ok($gffAnnotation->attribute("gene_id") eq "AB000123.1",'attribute() (1)');
 ok($gffAnnotation->attribute("transcript_id") eq "AB00123.1.2",'attribute() (2)');
 $gffAnnotation->attribute("transcript_id","test");

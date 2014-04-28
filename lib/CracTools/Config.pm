@@ -76,23 +76,17 @@
 #                                                                             #
 ###############################################################################
 
-=encoding utf8
-
-=head1 NAME
-
-CracTools::Config - Manage and access CracTools configuration file
-
-=cut
-
-
 package CracTools::Config;
-
+{
+  $CracTools::Config::DIST = 'CracTools-core';
+}
+# ABSTRACT: Manage and access CracTools configuration file
+$CracTools::Config::VERSION = '1.031';
 use strict;
 use warnings;
 use POSIX;
-use utf8;
 
-use Config::FileManager;
+use Config::FileManager 1.6;
 use Config::Simple;
 use File::Basename;
 use File::HomeDir;
@@ -129,15 +123,6 @@ my $default_content = "# Default configuration file __VERSION__\n#\n\n";
 
 $cfg->defaultContent($default_content);
 
-=head2 PrintVersion
-
-Print (in an uniformized way) the version information of the CracUtil script.
-
-Usage:
-
-  PrintVersion();
-
-=cut
 
 sub PrintVersion() {
   printf( "Script '%s' from %s v. %s (%s v. %s)\n",
@@ -146,14 +131,6 @@ sub PrintVersion() {
 	  $CracTools::PACKAGE_NAME, $CracTools::VERSION);
 }
 
-=head2 LoadConfig
-
-Usage:
-
-  my $default_cfg = LoadConfig(); # Use (and get) default config file (see L<Config::FileManager>)
-  LoadConfig("your_file.conf");
-
-=cut
 
 sub LoadConfig(;$) {
     my ($config_file) = @_;
@@ -165,13 +142,6 @@ sub LoadConfig(;$) {
     return $config_file;
 }
 
-=head2 getConfVar
-
-Usage:
-
-  my $var = getConfVar("GENOME"); 
-
-=cut
 
 sub getConfVar(;$) {
   my $var_name = shift;
@@ -188,42 +158,62 @@ sub getConfVar(;$) {
 }
 
 1; 
+
 __END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+CracTools::Config - Manage and access CracTools configuration file
+
+=head1 VERSION
+
+version 1.031
+
+=head2 PrintVersion
+
+Print (in an uniformized way) the version information of the CracUtil script.
+
+Usage:
+
+  PrintVersion();
+
+=head2 LoadConfig
+
+Usage:
+
+  my $default_cfg = LoadConfig(); # Use (and get) default config file (see L<Config::FileManager>)
+  LoadConfig("your_file.conf");
+
+=head2 getConfVar
+
+Usage:
+
+  my $var = getConfVar("GENOME"); 
 
 =head1 AUTHORS
 
-Nicolas PHILIPPE E<lt>L<nicolas.philippe@inserm.fr|mailto:nicolas.philippe@inserm.fr>E<gt>.
-Alban MANCHERON E<lt>L<alban.mancheron@lirmm.fr|mailto:alban.mancheron@lirmm.fr>E<gt>,
+=over 4
+
+=item *
+
+Nicolas PHILIPPE <nicolas.philippe@inserm.fr>
+
+=item *
+
+Jérôme AUDOUX <jaudoux@cpan.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2012-2013 -- IRB/INSERM
-                           (Institut de Recherche en Biothérapie /
-                            Institut National de la Santé et de la
-                            Recherche Médicale)
-                           LIRMM/UM2
-                           (Laboratoire d'Informatique, de Robotique et de
-                            Microélectronique de Montpellier /
-                            Université de Montpellier 2)
+This software is Copyright (c) 2014 by IRB/INSERM (Institut de Recherche en Biothérapie / Institut National de la Santé et de la Recherche Médicale).
 
-=head2 FRENCH
+This is free software, licensed under:
 
-Ce fichier  fait partie  du Pipeline  de traitement  de données NGS de la
-plateforme ATGC labélisée par le GiS IBiSA.
+  CeCILL FREE SOFTWARE LICENSE AGREEMENT, Version 2.1 dated 2013-06-21
 
-Ce logiciel est régi  par la licence CeCILL  soumise au droit français et
-respectant les principes  de diffusion des logiciels libres.  Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions de
-la licence CeCILL  telle que diffusée par le CEA,  le CNRS et l'INRIA sur
-le site "http://www.cecill.info".
-
-=head2 ENGLISH
-
-This File is part of the NGS data processing Pipeline of the ATGC
-accredited by the IBiSA GiS.
-
-This software is governed by the CeCILL license under French law and
-abiding by the rules of distribution of free software. You can use,
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info".
+=cut
